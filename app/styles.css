@@ -20,3 +20,8 @@ button{font:inherit;cursor:pointer}
 .action.primary{background:#4ca9ff;color:#06111b;border-color:#4ca9ff}
 .note{font-size:8px;color:#8198b1;margin-top:12px}
 @media(max-width:600px){.shell{width:100%}.actions{grid-template-columns:1fr 1fr}}
+.logo{
+  color:#fff;
+  text-decoration:none;
+  cursor:pointer;
+}
