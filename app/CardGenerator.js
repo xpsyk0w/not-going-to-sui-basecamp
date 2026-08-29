@@ -13,9 +13,19 @@ export default function CardGenerator(){
   const [handle,setHandle]=useState("");
   const canvasRef=useRef(null);
 
+  useEffect(() => {
+  if (!handle) return;
+
+  const timer = setTimeout(() => {
+    drawCard(handle);
+  }, 50);
+
+  return () => clearTimeout(timer);
+}, [handle]);
+
   useEffect(()=>{
     const u=cleanHandle(new URLSearchParams(window.location.search).get("u")||"");
-    if(u){ setValue("@"+u); setHandle(u); setTimeout(()=>drawCard(u),50); }
+    if(u){ setValue("@"+u); setHandle(u);  }
   },[]);
 
   async function fetchAvatarDataUrl(h){
@@ -82,7 +92,6 @@ export default function CardGenerator(){
     const h=cleanHandle(value); if(!h) return;
     setHandle(h); setValue("@"+h);
     const u=new URL(window.location.href); u.search=""; u.searchParams.set("u",h); history.replaceState({},"",u);
-    await drawCard(h);
   }
 
   function post(){
