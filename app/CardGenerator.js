@@ -104,7 +104,9 @@ export default function CardGenerator(){
 
   return <div className="shell">
     <div className="top">
-      <div className="logo">SUI <span>BASECAMP</span> 2026</div>
+      <a className="logo" href="/">
+  SUI <span>BASECAMP</span> 2026
+</a>
       <a className="reg" href="https://sui.io/basecamp" target="_blank">Register Now</a>
     </div>
 
