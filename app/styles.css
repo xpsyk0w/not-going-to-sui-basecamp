@@ -3,8 +3,10 @@ html,body{margin:0;min-height:100%;background:#020b18;color:#fff;font-family:Ari
 body{min-height:100vh}
 .shell{width:560px;max-width:calc(100vw - 36px);margin:0 auto;padding:30px 0 80px}
 .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:25px}
-.logo{font-size:10px;font-weight:800;letter-spacing:-.2px}
-.logo span{color:#48a8ff}
+.logo{font-size:10px;font-weight:800;letter-spacing:-.2px;color:#fff;text-decoration:none;cursor:pointer;}
+.logo:visited,
+.logo:hover,
+.logo:active{color:#fff;text-decoration:none;}.logo span{color:#48a8ff;}
 .reg{border:1px solid #203653;background:#0a1628;color:#fff;border-radius:6px;padding:10px 15px;text-decoration:none;font-size:9px;font-weight:700}
 h1{font-size:28px;line-height:.98;letter-spacing:-1px;text-transform:uppercase;margin:0 0 10px;font-weight:900}
 .desc{font-size:12px;line-height:1.35;color:#a8bed6;margin:0 0 20px;max-width:360px}
@@ -20,8 +22,3 @@ button{font:inherit;cursor:pointer}
 .action.primary{background:#4ca9ff;color:#06111b;border-color:#4ca9ff}
 .note{font-size:8px;color:#8198b1;margin-top:12px}
 @media(max-width:600px){.shell{width:100%}.actions{grid-template-columns:1fr 1fr}}
-.logo{
-  color:#fff;
-  text-decoration:none;
-  cursor:pointer;
-}
