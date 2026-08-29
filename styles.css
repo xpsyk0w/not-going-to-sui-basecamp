@@ -1,0 +1,22 @@
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#020b18;color:#fff;font-family:Arial,Helvetica,sans-serif}
+body{min-height:100vh}
+.shell{width:560px;max-width:calc(100vw - 36px);margin:0 auto;padding:30px 0 80px}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:25px}
+.logo{font-size:10px;font-weight:800;letter-spacing:-.2px}
+.logo span{color:#48a8ff}
+.reg{border:1px solid #203653;background:#0a1628;color:#fff;border-radius:6px;padding:10px 15px;text-decoration:none;font-size:9px;font-weight:700}
+h1{font-size:28px;line-height:.98;letter-spacing:-1px;text-transform:uppercase;margin:0 0 10px;font-weight:900}
+.desc{font-size:12px;line-height:1.35;color:#a8bed6;margin:0 0 20px;max-width:360px}
+.form{display:flex;gap:7px;margin-bottom:18px}
+input{flex:1;height:36px;border:1px solid #18314f;border-radius:6px;background:#0b1729;color:#fff;padding:0 10px;font-size:11px;outline:none}
+button{font:inherit;cursor:pointer}
+.generate{width:67px;border:0;border-radius:6px;background:#4ca9ff;color:#02101e;font-weight:800;font-size:9px}
+.greet{font-size:15px;font-weight:800;margin:0 0 14px}
+.cardFrame{padding:6px;border-radius:10px;background:#0b1729;border:1px solid #18314f}
+.cardCanvas{display:block;width:100%;height:auto;border-radius:6px;background:#000}
+.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.action{height:34px;border-radius:6px;border:1px solid #1b3553;background:#0b1729;color:#fff;font-size:9px;font-weight:700}
+.action.primary{background:#4ca9ff;color:#06111b;border-color:#4ca9ff}
+.note{font-size:8px;color:#8198b1;margin-top:12px}
+@media(max-width:600px){.shell{width:100%}.actions{grid-template-columns:1fr 1fr}}
