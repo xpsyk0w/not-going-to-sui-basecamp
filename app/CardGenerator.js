@@ -61,11 +61,11 @@ export default function CardGenerator(){
 
     const leftX=40,leftY=34,leftW=470,leftH=250;
     ctx.fillStyle="#fff";ctx.fillRect(leftX,leftY,leftW,leftH);
-    ctx.fillStyle="#000";ctx.textBaseline="top";ctx.font="900 76px Arial";
-    ctx.fillText("I’m not going to",leftX+22,leftY+16);ctx.fillText("Sui Basecamp",leftX+22,leftY+86);ctx.fillText("2026",leftX+22,leftY+156);
+    ctx.fillStyle="#000";ctx.textBaseline="top";ctx.font="900 52px Arial";
+    ctx.fillText("I’m not going to",leftX+22,leftY+16);ctx.fillText("Sui Basecamp",leftX+22,leftY+66);ctx.fillText("2026",leftX+22,leftY+116);
     ctx.font="500 27px Arial";ctx.fillText("with TOKEN2049",leftX+24,leftY+226);
 
-    const badgeX=leftX+265,badgeY=leftY+90;
+    const badgeX=leftX+330,badgeY=leftY+105;
     ctx.fillStyle="#101010";ctx.fillRect(badgeX,badgeY,158,64);ctx.fillStyle="#fff";ctx.font="500 17px Arial";
     ctx.fillText("Marina Bay Sands, Singapore",badgeX+10,badgeY+10);ctx.fillText("7-8 October",badgeX+10,badgeY+32);
 
@@ -79,7 +79,7 @@ export default function CardGenerator(){
     const data=await fetchAvatarDataUrl(h);
     if(data){
       const img=new Image(); img.src=data; await new Promise((res,rej)=>{img.onload=res;img.onerror=rej});
-      const cropX=rightX+66,cropY=rightY+28,cropW=310,cropH=420;
+      const cropX=rightX,cropY=rightY,cropW=rightW,cropH=rightH;
       const ir=img.width/img.height, br=cropW/cropH; let dw,dh,dx,dy;
       if(ir>br){dh=cropH;dw=dh*ir;dx=cropX-(dw-cropW)/2;dy=cropY;}else{dw=cropW;dh=dw/ir;dx=cropX;dy=cropY-(dh-cropH)/2;}
       ctx.drawImage(img,dx,dy,dw,dh);
