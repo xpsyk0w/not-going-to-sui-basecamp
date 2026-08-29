@@ -28,30 +28,41 @@ export default function CardGenerator(){
     if(u){ setValue("@"+u); setHandle(u);  }
   },[]);
 
-  async function fetchAvatarDataUrl(h){
-    const urls=[`https://unavatar.io/x/${encodeURIComponent(h)}`,`https://unavatar.io/twitter/${encodeURIComponent(h)}`];
-    for(const url of urls){
-      try{
-        const r=await fetch(url,{mode:"cors"});
-        if(!r.ok) continue;
-        const b=await r.blob();
-        return await new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>res(fr.result);fr.onerror=rej;fr.readAsDataURL(b);});
-      }catch(e){}
-    }
-    return "";
+async function fetchAvatarDataUrl(handle) {
+  const urls = [
+    `https://unavatar.io/x/${encodeURIComponent(handle)}`,
+    `https://unavatar.io/twitter/${encodeURIComponent(handle)}`
+  ];
+
+  for (const url of urls) {
+    try {
+      const r = await fetch(url, { mode: "cors" });
+      if (!r.ok) continue;
+      const blob = await r.blob();
+
+      const dataUrl = await new Promise((resolve, reject) => {
+        const fr = new FileReader();
+        fr.onload = () => resolve(fr.result);
+        fr.onerror = reject;
+        fr.readAsDataURL(blob);
+      });
+
+      return dataUrl;
+    } catch (e) {}
   }
 
-  function createBgPattern(ctx){
-    const p=document.createElement("canvas"); p.width=420; p.height=420;
-    const c=p.getContext("2d");
-    const g=c.createLinearGradient(0,0,p.width,0);
-    const stops=[[0,"#3a3836"],[.06,"#101418"],[.11,"#55cdc6"],[.14,"#161616"],[.22,"#ff7b4e"],[.28,"#e35d46"],[.33,"#161616"],[.40,"#6be1e0"],[.48,"#ff6d49"],[.55,"#ff9259"],[.61,"#171717"],[.68,"#5de0e0"],[.74,"#e55b3f"],[.82,"#171717"],[.90,"#58d6cf"],[1,"#101010"]];
-    stops.forEach(([s,col])=>g.addColorStop(s,col)); c.fillStyle=g; c.fillRect(0,0,p.width,p.height);
-    c.globalAlpha=.13; for(let i=0;i<p.width;i+=18){c.fillStyle=i%36===0?"#fff":"#000";c.fillRect(i,0,2,p.height)} c.globalAlpha=1;
-    const fade=c.createLinearGradient(0,0,0,p.height); fade.addColorStop(0,"rgba(0,0,0,.30)"); fade.addColorStop(.35,"rgba(0,0,0,0)"); fade.addColorStop(1,"rgba(0,0,0,.24)");
-    c.fillStyle=fade;c.fillRect(0,0,p.width,p.height);
-    return ctx.createPattern(p,"repeat");
-  }
+  return "";
+}
+
+  function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
 
 async function drawCard(h) {
   const canvas = canvasRef.current;
