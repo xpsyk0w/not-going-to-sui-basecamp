@@ -53,40 +53,202 @@ export default function CardGenerator(){
     return ctx.createPattern(p,"repeat");
   }
 
-  async function drawCard(h){
-    const canvas=canvasRef.current; if(!canvas) return;
-    const ctx=canvas.getContext("2d"); const W=1100,H=640;
-    canvas.width=W; canvas.height=H; ctx.clearRect(0,0,W,H);
-    ctx.fillStyle=createBgPattern(ctx); ctx.fillRect(0,0,W,H);
+async function drawCard(h){
+  const canvas = canvasRef.current;
+  if(!canvas) return;
 
-    const leftX=40,leftY=34,leftW=470,leftH=250;
-    ctx.fillStyle="#fff";ctx.fillRect(leftX,leftY,leftW,leftH);
-    ctx.fillStyle="#000";ctx.textBaseline="top";ctx.font="900 52px Arial";
-    ctx.fillText("I’m not going to",leftX+22,leftY+16);ctx.fillText("Sui Basecamp",leftX+22,leftY+66);ctx.fillText("2026",leftX+22,leftY+116);
-    ctx.font="500 27px Arial";ctx.fillText("with TOKEN2049",leftX+24,leftY+226);
+  const ctx = canvas.getContext("2d");
+  const W = 1100;
+  const H = 620;
 
-    const badgeX=leftX+330,badgeY=leftY+105;
-    ctx.fillStyle="#101010";ctx.fillRect(badgeX,badgeY,158,64);ctx.fillStyle="#fff";ctx.font="500 17px Arial";
-    ctx.fillText("Marina Bay Sands, Singapore",badgeX+10,badgeY+10);ctx.fillText("7-8 October",badgeX+10,badgeY+32);
+  canvas.width = W;
+  canvas.height = H;
 
-    const siteX=leftX+262,siteY=leftY+198;
-    ctx.fillStyle="#fff";ctx.fillRect(siteX,siteY,169,55);ctx.fillStyle="#222";ctx.font="500 28px Arial";ctx.fillText("sui.io/basecamp",siteX+12,siteY+15);
+  // ===== Background =====
+  ctx.clearRect(0,0,W,H);
 
-    const rightX=580,rightY=30,rightW=470,rightH=470;
-    const rg=ctx.createLinearGradient(rightX,rightY,rightX+rightW,rightY+rightH);rg.addColorStop(0,"#df6ed6");rg.addColorStop(.45,"#c24cb9");rg.addColorStop(1,"#a33096");
-    ctx.fillStyle=rg;ctx.fillRect(rightX,rightY,rightW,rightH);
+  const bg = ctx.createLinearGradient(0,0,W,0);
+  bg.addColorStop(0.00, "#1b2023");
+  bg.addColorStop(0.08, "#78f0ea");
+  bg.addColorStop(0.16, "#ff7a4a");
+  bg.addColorStop(0.24, "#ff5cb8");
+  bg.addColorStop(0.34, "#ffd36a");
+  bg.addColorStop(0.46, "#82f1ea");
+  bg.addColorStop(0.60, "#ff7848");
+  bg.addColorStop(0.74, "#7cf0eb");
+  bg.addColorStop(0.86, "#ff6d46");
+  bg.addColorStop(1.00, "#161a1d");
+  ctx.fillStyle = bg;
+  ctx.fillRect(0,0,W,H);
 
-    const data=await fetchAvatarDataUrl(h);
-    if(data){
-      const img=new Image(); img.src=data; await new Promise((res,rej)=>{img.onload=res;img.onerror=rej});
-      const cropX=rightX,cropY=rightY,cropW=rightW,cropH=rightH;
-      const ir=img.width/img.height, br=cropW/cropH; let dw,dh,dx,dy;
-      if(ir>br){dh=cropH;dw=dh*ir;dx=cropX-(dw-cropW)/2;dy=cropY;}else{dw=cropW;dh=dw/ir;dx=cropX;dy=cropY-(dh-cropH)/2;}
-      ctx.drawImage(img,dx,dy,dw,dh);
+  // dark vertical bands / neon feel
+  ctx.save();
+  ctx.globalAlpha = 0.55;
+  for(let x=0; x<W; x+=42){
+    ctx.fillStyle = x % 84 === 0 ? "rgba(0,0,0,.42)" : "rgba(255,255,255,.05)";
+    ctx.fillRect(x,0,18,H);
+  }
+  ctx.restore();
+
+  const overlay = ctx.createLinearGradient(0,0,0,H);
+  overlay.addColorStop(0,"rgba(0,0,0,.18)");
+  overlay.addColorStop(0.45,"rgba(0,0,0,0)");
+  overlay.addColorStop(1,"rgba(0,0,0,.22)");
+  ctx.fillStyle = overlay;
+  ctx.fillRect(0,0,W,H);
+
+  // ===== Left white panel =====
+  const leftX = 34;
+  const leftY = 42;
+  const leftW = 520;
+  const leftH = 320;
+
+  ctx.fillStyle = "#fff";
+  ctx.fillRect(leftX,leftY,leftW,leftH);
+
+  ctx.fillStyle = "#000";
+  ctx.textBaseline = "top";
+
+  ctx.font = "900 70px Arial, Helvetica, sans-serif";
+  ctx.fillText("I’m not going to", leftX + 18, leftY + 12);
+  ctx.fillText("Sui Basecamp", leftX + 18, leftY + 78);
+
+  ctx.font = "900 72px Arial, Helvetica, sans-serif";
+  ctx.fillText("2026", leftX + 18, leftY + 144);
+
+  ctx.font = "500 20px Arial, Helvetica, sans-serif";
+  ctx.fillText("with TOKEN2049", leftX + 18, leftY + 248);
+
+  // ===== Black date box =====
+  const badgeX = leftX + 248;
+  const badgeY = leftY + 116;
+  const badgeW = 185;
+  const badgeH = 66;
+
+  ctx.fillStyle = "#0b0b0b";
+  ctx.fillRect(badgeX,badgeY,badgeW,badgeH);
+
+  ctx.fillStyle = "#fff";
+  ctx.font = "500 15px Arial, Helvetica, sans-serif";
+  ctx.fillText("Marina Bay Sands, Singapore", badgeX + 10, badgeY + 12);
+  ctx.fillText("7-8 October", badgeX + 10, badgeY + 34);
+
+  // ===== URL white box =====
+  const urlX = leftX + 248;
+  const urlY = leftY + 214;
+  const urlW = 184;
+  const urlH = 48;
+
+  ctx.fillStyle = "#fff";
+  ctx.fillRect(urlX,urlY,urlW,urlH);
+
+  ctx.fillStyle = "#222";
+  ctx.font = "500 18px Arial, Helvetica, sans-serif";
+  ctx.fillText("sui.io/basecamp", urlX + 12, urlY + 13);
+
+  // ===== Right panel =====
+  const rightX = 610;
+  const rightY = 42;
+  const rightW = 350;
+  const rightH = 410;
+
+  const rg = ctx.createLinearGradient(rightX,rightY,rightX+rightW,rightY+rightH);
+  rg.addColorStop(0,"#d96bd0");
+  rg.addColorStop(.5,"#c54ab8");
+  rg.addColorStop(1,"#a92f99");
+  ctx.fillStyle = rg;
+  ctx.fillRect(rightX,rightY,rightW,rightH);
+
+  // decorative pattern
+  ctx.save();
+  ctx.strokeStyle = "rgba(255,255,255,.22)";
+  ctx.lineWidth = 2;
+
+  const circles = [
+    [42,36,12],[104,54,18],[178,30,10],[244,60,16],[304,34,20],
+    [72,150,16],[184,126,10],[276,162,18],[110,245,14],[286,268,12]
+  ];
+  circles.forEach(([cx,cy,r])=>{
+    ctx.beginPath();
+    ctx.arc(rightX+cx,rightY+cy,r,0,Math.PI*2);
+    ctx.stroke();
+  });
+
+  for(let i=0;i<24;i++){
+    const px = rightX + 18 + ((i*61) % (rightW-36));
+    const py = rightY + 18 + ((i*89) % (rightH-36));
+    ctx.beginPath();
+    ctx.moveTo(px-4,py); ctx.lineTo(px+4,py);
+    ctx.moveTo(px,py-4); ctx.lineTo(px,py+4);
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  // ===== Avatar fills the full right panel =====
+  const data = await fetchAvatarDataUrl(h);
+
+  if(data){
+    const img = new Image();
+    img.src = data;
+    await new Promise((res,rej)=>{ img.onload=res; img.onerror=rej; });
+
+    const cropX = rightX;
+    const cropY = rightY;
+    const cropW = rightW;
+    const cropH = rightH;
+
+    const ir = img.width / img.height;
+    const br = cropW / cropH;
+    let dw, dh, dx, dy;
+
+    if(ir > br){
+      dh = cropH;
+      dw = dh * ir;
+      dx = cropX - (dw - cropW) / 2;
+      dy = cropY;
+    } else {
+      dw = cropW;
+      dh = dw / ir;
+      dx = cropX;
+      dy = cropY - (dh - cropH) / 2;
     }
 
-    ctx.fillStyle="rgba(59,55,49,.88)";ctx.fillRect(608,506,414,55);ctx.fillStyle="#fff";ctx.font="700 38px Arial";ctx.fillText("@"+h,624,516);
+    ctx.drawImage(img, dx, dy, dw, dh);
   }
+
+  // redraw pattern lightly over avatar so it feels closer to original
+  ctx.save();
+  ctx.strokeStyle = "rgba(255,255,255,.16)";
+  ctx.lineWidth = 2;
+  const circles2 = [
+    [42,36,12],[104,54,18],[178,30,10],[244,60,16],[304,34,20],
+    [72,150,16],[184,126,10],[276,162,18],[110,245,14],[286,268,12]
+  ];
+  circles2.forEach(([cx,cy,r])=>{
+    ctx.beginPath();
+    ctx.arc(rightX+cx,rightY+cy,r,0,Math.PI*2);
+    ctx.stroke();
+  });
+  ctx.restore();
+
+  // ===== Handle bar =====
+  const barX = rightX;
+  const barY = 470;
+  const barW = rightW;
+  const barH = 52;
+
+  ctx.fillStyle = "rgba(66,58,53,.88)";
+  ctx.fillRect(barX,barY,barW,barH);
+
+  ctx.fillStyle = "#fff";
+  ctx.font = "700 24px Arial, Helvetica, sans-serif";
+  ctx.fillText("@"+h, barX + 12, barY + 11);
+
+  // subtle outer border
+  ctx.strokeStyle = "rgba(255,255,255,.08)";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(1,1,W-2,H-2);
+}
 
   async function generate(){
     const h=cleanHandle(value); if(!h) return;
