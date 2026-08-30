@@ -171,7 +171,7 @@ export default function CardGenerator() {
         const px = 1005;
         const py = 75;
         const pw = 817;
-        const ph = 700;
+        const ph = 830;
 
         const sourceRatio =
           img.width / img.height;
@@ -232,21 +232,21 @@ export default function CardGenerator() {
 
     ctx.fillRect(
       1005,
-      776,
+      905,
       817,
-      94
+      105
     );
 
     ctx.fillStyle = "#ffffff";
     ctx.textBaseline = "top";
 
     ctx.font =
-      "700 64px Arial, Helvetica, sans-serif";
+      "700 58px Arial, Helvetica, sans-serif";
 
     ctx.fillText(
       "@" + h,
       1035,
-      790
+      925
     );
   }
 
