@@ -138,21 +138,21 @@ export default function CardGenerator() {
 
     ctx.fillRect(
       72,
-      62,
-      760,
-      140
+      56,
+      800,
+      150
     );
 
     ctx.fillStyle = "#000000";
     ctx.textBaseline = "top";
 
     ctx.font =
-      "900 104px Arial, Helvetica, sans-serif";
+      "900 124px Arial, Helvetica, sans-serif";
 
     ctx.fillText(
       "I’m not going to",
-      88,
-      62
+      84,
+      54
     );
 
     // ======================================================
@@ -192,7 +192,7 @@ export default function CardGenerator() {
  }
 
         // Slight zoom in
-        const zoom = 1.12;
+        const zoom = 1.18;
         const newSw = sw / zoom;
         const newSh = sh / zoom;
  
