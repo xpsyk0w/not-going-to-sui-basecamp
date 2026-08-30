@@ -138,9 +138,9 @@ export default function CardGenerator() {
 
     ctx.fillRect(
       72,
-      68,
-      690,
-      124
+      62,
+      760,
+      140
     );
 
     ctx.fillStyle = "#000000";
@@ -151,8 +151,8 @@ export default function CardGenerator() {
 
     ctx.fillText(
       "I’m not going to",
-      91,
-      75
+      88,
+      62
     );
 
     // ======================================================
@@ -173,11 +173,8 @@ export default function CardGenerator() {
         const pw = 817;
         const ph = 830;
 
-        const sourceRatio =
-          img.width / img.height;
-
-        const targetRatio =
-          pw / ph;
+        const sourceRatio = img.width / img.height;
+        const targetRatio = pw / ph;
 
         let sx = 0;
         let sy = 0;
@@ -187,21 +184,22 @@ export default function CardGenerator() {
 
         // Cover crop
         if (sourceRatio > targetRatio) {
-          sw =
-            img.height *
-            targetRatio;
+        sw = img.height * targetRatio;
+        sx = (img.width - sw) / 2;
+       } else {
+        sh = img.width / targetRatio;
+        sy = (img.height - sh) / 2;
+ }
 
-          sx =
-            (img.width - sw) / 2;
-        } else {
-          sh =
-            img.width /
-            targetRatio;
-
-          sy =
-            (img.height - sh) / 2;
-        }
-
+        // Slight zoom in
+        const zoom = 1.12;
+        const newSw = sw / zoom;
+        const newSh = sh / zoom;
+ 
+        sx += (sw - newSw) / 2;
+        sy += (sh - newSh) / 2;
+        sw = newSw;
+        sh = newSh;
         ctx.drawImage(
           img,
 
