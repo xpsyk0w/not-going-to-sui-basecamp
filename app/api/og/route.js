@@ -26,23 +26,23 @@ export async function GET(request) {
   const baseW = 1920;
   const baseH = 1080;
 
-  const scale = outW / baseW;
+  // IMPORTANT : scale uniforme
+  const scale = outW / baseW; // 0.625
 
-  // template 1920x1080 affiché en 1200x675 puis légèrement remonté
-  const templateW = 1200;
-  const templateH = 675;
+  // On garde le ratio du template, puis on crop en hauteur
+  const templateW = outW;
+  const templateH = Math.round(baseH * scale); // 675
   const templateX = 0;
-  const templateY = -22;
+  const templateY = Math.round((outH - templateH) / 2); // ≈ -22 / -23
 
-  // zone PFP
-  const avatarX = 1005 * scale;
-  const avatarY = 75 * scale + templateY;
-  const avatarW = 817 * scale;
-  const avatarH = 700 * scale;
+  // Coordonnées venant de ta version canvas qui marche
+  const avatarX = Math.round(1005 * scale);
+  const avatarY = Math.round(75 * scale + templateY);
+  const avatarW = Math.round(817 * scale);
+  const avatarH = Math.round(700 * scale);
 
-  // zone @handle à droite (on la garde)
-  const handleX = 1035 * scale;
-  const handleY = 795 * scale + templateY;
+  const handleX = Math.round(1035 * scale);
+  const handleY = Math.round(795 * scale + templateY);
 
   return new ImageResponse(
     (
@@ -82,7 +82,7 @@ export async function GET(request) {
             height: `${avatarH}px`,
             overflow: "hidden",
             display: "flex",
-            background: "#000"
+            background: "#000000"
           }}
         >
           <img
@@ -93,13 +93,13 @@ export async function GET(request) {
               width: "100%",
               height: "100%",
               objectFit: "cover",
-              objectPosition: "56% 48%",
+              objectPosition: "50% 50%",
               display: "block"
             }}
           />
         </div>
 
-        {/* @handle à droite : ON LE GARDE */}
+        {/* @handle dans la bonne zone */}
         <div
           style={{
             position: "absolute",
@@ -108,35 +108,12 @@ export async function GET(request) {
             display: "flex",
             alignItems: "center",
             color: "#ffffff",
-            fontSize: "28px",
-            fontWeight: 500,
+            fontSize: `${Math.round(58 * scale)}px`,
+            fontWeight: 700,
             lineHeight: 1
           }}
         >
           @{h}
-        </div>
-
-        {/* bandeau du bas : juste DESCENDU */}
-        <div
-          style={{
-            position: "absolute",
-            left: "52px",
-            right: "52px",
-            bottom: "10px",
-            height: "30px",
-            display: "flex",
-            alignItems: "center",
-            paddingLeft: "10px",
-            paddingRight: "10px",
-            background: "rgba(27,25,24,0.82)",
-            color: "#ffffff",
-            fontSize: "16px",
-            fontWeight: 500,
-            lineHeight: 1,
-            whiteSpace: "nowrap"
-          }}
-        >
-          @{h} is not going to Sui Basecamp 2026
         </div>
       </div>
     ),
