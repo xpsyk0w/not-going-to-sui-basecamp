@@ -124,6 +124,27 @@ export async function GET(request) {
           @{h}
         </div>
       </div>
+
+           {/* BANDEAU BAS POUR LA PREVIEW X */}
+      <div
+           style={{
+             position: "absolute",
+             left: "42px",
+             right: "42px",
+             bottom: "32px",
+             height: "42px",
+             display: "flex",
+             alignItems: "center",
+             paddingLeft: "12px",
+             background: "rgba(34, 31, 29, 0.82)",
+             color: "#ffffff",
+             fontSize: "20px",
+             fontWeight: 600,
+             lineHeight: 1
+        }}
+  >
+            @{h} is not going to Sui Basecamp 2026
+   </div>
     ),
     {
       width: outW,
