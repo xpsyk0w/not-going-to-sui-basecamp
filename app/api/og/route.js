@@ -5,35 +5,46 @@ export const runtime = "edge";
 const SITE_URL = "https://not-going-to-sui-basecamp.vercel.app";
 
 function clean(value = "") {
-  return String(value)
-    .replace(/^@/, "")
-    .replace(/[^A-Za-z0-9_]/g, "")
-    .slice(0, 15) || "yourhandle";
+  return (
+    String(value)
+      .replace(/^@/, "")
+      .replace(/[^A-Za-z0-9_]/g, "")
+      .slice(0, 15) || "yourhandle"
+  );
 }
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
+
   const h = clean(searchParams.get("u"));
 
   const template = `${SITE_URL}/basecamp-template-V2.png`;
   const avatar = `https://unavatar.io/x/${encodeURIComponent(h)}`;
 
+  // Taille finale de l'image OG
   const outW = 1200;
   const outH = 630;
 
+  // Taille originale du template
   const baseW = 1920;
   const baseH = 1080;
 
   const scaleX = outW / baseW;
   const scaleY = outH / baseH;
 
-  // zone photo du template
+  // ======================================================
+  // PFP
+  // ======================================================
+
   const avatarX = 1005 * scaleX;
   const avatarY = 75 * scaleY;
   const avatarW = 817 * scaleX;
   const avatarH = 700 * scaleY;
 
-  // zone texte du handle (dans la barre du bas de ton template)
+  // ======================================================
+  // @HANDLE
+  // ======================================================
+
   const handleBarX = 1005 * scaleX;
   const handleBarY = 775 * scaleY;
   const handleBarW = 817 * scaleX;
@@ -46,13 +57,13 @@ export async function GET(request) {
           width: `${outW}px`,
           height: `${outH}px`,
           position: "relative",
-          overflow: "hidden",
           display: "flex",
+          overflow: "hidden",
           background: "#08192a",
           fontFamily: "Arial, Helvetica, sans-serif"
         }}
       >
-        {/* template V2 clean */}
+        {/* TEMPLATE */}
         <img
           src={template}
           width={outW}
@@ -67,7 +78,7 @@ export async function GET(request) {
           }}
         />
 
-        {/* PFP dynamique */}
+        {/* PFP DYNAMIQUE */}
         <div
           style={{
             position: "absolute",
@@ -75,25 +86,25 @@ export async function GET(request) {
             top: `${avatarY}px`,
             width: `${avatarW}px`,
             height: `${avatarH}px`,
-            overflow: "hidden",
-            display: "flex"
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            overflow: "hidden"
           }}
         >
           <img
             src={avatar}
-            width={avatarW}
-            height={avatarH}
             style={{
               width: "100%",
               height: "100%",
-              objectFit: "cover",
-              objectPosition: "56% 48%",
+              objectFit: "contain",
+              objectPosition: "center",
               display: "block"
             }}
           />
         </div>
 
-        {/* @handle dans la barre prévue */}
+        {/* @HANDLE */}
         <div
           style={{
             position: "absolute",
@@ -105,7 +116,7 @@ export async function GET(request) {
             alignItems: "center",
             paddingLeft: `${22 * scaleX}px`,
             color: "#ffffff",
-            fontSize: `${34 * scaleY}px`,
+            fontSize: `${58 * scaleY}px`,
             fontWeight: 700,
             lineHeight: 1
           }}
