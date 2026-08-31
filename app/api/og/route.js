@@ -21,11 +21,11 @@ export async function GET(request) {
   const template = `${SITE_URL}/basecamp-template-V2.png`;
   const avatar = `https://unavatar.io/x/${encodeURIComponent(h)}`;
 
-  // Taille finale de l'image OG
+  // Image OG finale
   const outW = 1200;
   const outH = 630;
 
-  // Taille originale du template
+  // Dimensions originales du template
   const baseW = 1920;
   const baseH = 1080;
 
@@ -33,22 +33,22 @@ export async function GET(request) {
   const scaleY = outH / baseH;
 
   // ======================================================
-  // PFP
+  // ZONE PFP
   // ======================================================
 
   const avatarX = 1005 * scaleX;
   const avatarY = 75 * scaleY;
   const avatarW = 817 * scaleX;
-  const avatarH = 700 * scaleY;
+  const avatarH = 830 * scaleY;
 
   // ======================================================
-  // @HANDLE
+  // ZONE @HANDLE
   // ======================================================
 
   const handleBarX = 1005 * scaleX;
-  const handleBarY = 775 * scaleY;
+  const handleBarY = 905 * scaleY;
   const handleBarW = 817 * scaleX;
-  const handleBarH = 95 * scaleY;
+  const handleBarH = 105 * scaleY;
 
   return new ImageResponse(
     (
@@ -63,7 +63,7 @@ export async function GET(request) {
           fontFamily: "Arial, Helvetica, sans-serif"
         }}
       >
-        {/* TEMPLATE */}
+        {/* TEMPLATE COMPLET */}
         <img
           src={template}
           width={outW}
@@ -104,7 +104,7 @@ export async function GET(request) {
           />
         </div>
 
-        {/* @HANDLE */}
+        {/* @HANDLE DANS LE RECTANGLE DU TEMPLATE */}
         <div
           style={{
             position: "absolute",
@@ -114,7 +114,7 @@ export async function GET(request) {
             height: `${handleBarH}px`,
             display: "flex",
             alignItems: "center",
-            paddingLeft: `${22 * scaleX}px`,
+            paddingLeft: `${30 * scaleX}px`,
             color: "#ffffff",
             fontSize: `${58 * scaleY}px`,
             fontWeight: 700,
