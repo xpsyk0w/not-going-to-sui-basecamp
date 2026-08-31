@@ -21,34 +21,46 @@ export async function GET(request) {
   const template = `${SITE_URL}/basecamp-template-V2.png`;
   const avatar = `https://unavatar.io/x/${encodeURIComponent(h)}`;
 
+  // ======================================================
+  // OG OUTPUT
+  // ======================================================
+
   const outW = 1200;
   const outH = 630;
 
+  // Template original = 1920 x 1080 (16:9)
   const baseW = 1920;
   const baseH = 1080;
 
-  const scaleX = outW / baseW;
-  const scaleY = outH / baseH;
+  // On garde STRICTEMENT le ratio du template.
+  // 1080 -> 630
+  const scale = outH / baseH;
+
+  // 1920 * 0.583333... = 1120
+  const cardW = baseW * scale;
+  const cardH = baseH * scale;
+
+  // Centre la carte dans l'OG 1200x630
+  const cardX = (outW - cardW) / 2;
+  const cardY = 0;
 
   // ======================================================
-  // PFP
-  // y 75 -> 775
+  // PFP — coordonnées du template original
   // ======================================================
 
-  const avatarX = 1005 * scaleX;
-  const avatarY = 75 * scaleY;
-  const avatarW = 817 * scaleX;
-  const avatarH = 700 * scaleY;
+  const avatarX = cardX + 1005 * scale;
+  const avatarY = cardY + 75 * scale;
+  const avatarW = 817 * scale;
+  const avatarH = 830 * scale;
 
   // ======================================================
-  // @HANDLE
-  // y 775 -> 870
+  // HANDLE — rectangle déjà présent dans le template
   // ======================================================
 
-  const handleBarX = 1005 * scaleX;
-  const handleBarY = 775 * scaleY;
-  const handleBarW = 817 * scaleX;
-  const handleBarH = 95 * scaleY;
+  const handleX = cardX + 1005 * scale;
+  const handleY = cardY + 905 * scale;
+  const handleW = 817 * scale;
+  const handleH = 105 * scale;
 
   return new ImageResponse(
     (
@@ -59,25 +71,28 @@ export async function GET(request) {
           position: "relative",
           display: "flex",
           overflow: "hidden",
-          background: "#08192a",
+          background: "#020b14",
           fontFamily: "Arial, Helvetica, sans-serif"
         }}
       >
-        {/* TEMPLATE */}
+        {/* =================================================
+            TEMPLATE — PAS ÉTIRÉ
+        ================================================= */}
         <img
           src={template}
-          width={outW}
-          height={outH}
           style={{
             position: "absolute",
-            left: 0,
-            top: 0,
-            width: "100%",
-            height: "100%"
+            left: cardX,
+            top: cardY,
+            width: cardW,
+            height: cardH,
+            display: "block"
           }}
         />
 
-        {/* PFP */}
+        {/* =================================================
+            PFP DYNAMIQUE
+        ================================================= */}
         <div
           style={{
             position: "absolute",
@@ -97,24 +112,27 @@ export async function GET(request) {
               width: "100%",
               height: "100%",
               objectFit: "contain",
-              objectPosition: "center"
+              objectPosition: "center",
+              display: "block"
             }}
           />
         </div>
 
-        {/* @HANDLE DANS LA BARRE DU TEMPLATE */}
+        {/* =================================================
+            @HANDLE DANS LA BARRE DU TEMPLATE
+        ================================================= */}
         <div
           style={{
             position: "absolute",
-            left: handleBarX,
-            top: handleBarY,
-            width: handleBarW,
-            height: handleBarH,
+            left: handleX,
+            top: handleY,
+            width: handleW,
+            height: handleH,
             display: "flex",
             alignItems: "center",
-            paddingLeft: `${24 * scaleX}px`,
+            paddingLeft: 18,
             color: "#ffffff",
-            fontSize: `${58 * scaleY}px`,
+            fontSize: 34,
             fontWeight: 700,
             lineHeight: 1
           }}
@@ -122,18 +140,20 @@ export async function GET(request) {
           @{h}
         </div>
 
-        {/* BANDEAU DE PARTAGE */}
+        {/* =================================================
+            BANDEAU FAÇON SITE ORIGINAL
+        ================================================= */}
         <div
           style={{
             position: "absolute",
-            left: 46,
-            right: 46,
-            bottom: 32,
+            left: cardX + 25,
+            bottom: 35,
             height: 30,
+            paddingLeft: 10,
+            paddingRight: 10,
             display: "flex",
             alignItems: "center",
-            paddingLeft: 10,
-            background: "rgba(28,27,26,0.82)",
+            background: "rgba(25, 24, 23, 0.82)",
             color: "#ffffff",
             fontSize: 17,
             fontWeight: 500,
