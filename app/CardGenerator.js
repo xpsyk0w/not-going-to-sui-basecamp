@@ -168,9 +168,9 @@ export default function CardGenerator() {
           await loadImage(avatarData);
 
         // Exact profile area from the original template
-        const px = 1035;
+        const px = 1005;
         const py = 75;
-        const pw = 787;
+        const pw = 817;
         const ph = 830;
 
         const sourceRatio = img.width / img.height;
@@ -204,6 +204,9 @@ export default function CardGenerator() {
         // move avatar slightly inside the frame
         sx -= 25;   // move avatar a bit to the right
         sy += 10;   // move avatar a bit lower
+
+        ctx.fillStyle = "#cfc9ef";
+        ctx.fillRect(px, py, pw, ph);
         
         ctx.drawImage(
           img,
