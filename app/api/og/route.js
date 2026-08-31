@@ -15,82 +15,80 @@ function clean(value = "") {
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
+
   const h = clean(searchParams.get("u"));
 
-  const template = `${SITE_URL}/basecamp-template-V2.png`;
-  const avatar = `https://unavatar.io/x/${encodeURIComponent(h)}`;
+  const templateUrl = `${SITE_URL}/basecamp-template-V2.png`;
+  const avatarUrl = `https://unavatar.io/x/${encodeURIComponent(h)}`;
 
-  // taille finale OG
-  const outW = 1200;
-  const outH = 630;
+  const OUT_W = 1200;
+  const OUT_H = 630;
 
-  // taille de ton template source
-  const baseW = 1920;
-  const baseH = 1080;
+  // Template source : 1920x1080
+  // On garde EXACTEMENT son ratio.
+  const SCALE = OUT_W / 1920; // 0.625
 
-  // IMPORTANT :
-  // on utilise UNE SEULE échelle uniforme
-  // pour éviter tous les décalages entre X et Y
-  const scale = outW / baseW;
+  const TEMPLATE_W = 1200;
+  const TEMPLATE_H = 1080 * SCALE; // 675
 
-  // le template prend toute la largeur
-  const templateW = outW;
-  const templateH = Math.round(baseH * scale); // 675
-  const templateX = 0;
-  const templateY = Math.round((outH - templateH) / 2); // légèrement négatif
+  // Crop vertical de 22.5 px en haut et en bas
+  const TEMPLATE_X = 0;
+  const TEMPLATE_Y = (OUT_H - TEMPLATE_H) / 2; // -22.5
 
-  // zone PFP du template
-  const avatarX = Math.round(templateX + 1005 * scale);
-  const avatarY = Math.round(templateY + 75 * scale);
-  const avatarW = Math.round(817 * scale);
-  const avatarH = Math.round(700 * scale);
+  // ======================================================
+  // PFP — coordonnées mesurées sur ton vrai template
+  // source : x=1015, y=67, w=833, h=835
+  // ======================================================
 
-  // zone du @handle dans la barre prévue du template
-  const handleX = Math.round(templateX + 1035 * scale);
-  const handleY = Math.round(templateY + 795 * scale);
+  const avatarX = 1015 * SCALE;
+  const avatarY = 67 * SCALE + TEMPLATE_Y;
+  const avatarW = 833 * SCALE;
+  const avatarH = 835 * SCALE;
 
-  // bandeau du bas
-  const bottomBarX = 32;
-  const bottomBarY = outH - 62;
-  const bottomBarW = outW - 64;
-  const bottomBarH = 42;
+  // ======================================================
+  // HANDLE — barre déjà présente dans le template
+  // source : x=1015, y=902, w=833
+  // ======================================================
+
+  const handleX = 1015 * SCALE;
+  const handleY = 902 * SCALE + TEMPLATE_Y;
+  const handleW = 833 * SCALE;
+  const handleH = 109 * SCALE;
 
   return new ImageResponse(
     (
       <div
         style={{
-          width: `${outW}px`,
-          height: `${outH}px`,
-          position: "relative",
+          width: OUT_W,
+          height: OUT_H,
           display: "flex",
+          position: "relative",
           overflow: "hidden",
-          background: "#08192a",
+          background: "#05070b",
           fontFamily: "Arial, Helvetica, sans-serif"
         }}
       >
-        {/* Template */}
+        {/* TEMPLATE */}
         <img
-          src={template}
-          width={templateW}
-          height={templateH}
+          src={templateUrl}
           style={{
             position: "absolute",
-            left: `${templateX}px`,
-            top: `${templateY}px`,
-            width: `${templateW}px`,
-            height: `${templateH}px`,
+            left: TEMPLATE_X,
+            top: TEMPLATE_Y,
+            width: TEMPLATE_W,
+            height: TEMPLATE_H,
             display: "block"
           }}
         />
 
-        {/* PFP entière, non découpée */}
+        {/* PFP ENTIÈRE */}
         <div
           style={{
             position: "absolute",
-            left: `${avatarX}px`,
-            top: `${avatarY}px`,
-            width: `${avatarW}px`,
-            height: `${avatarH}px`,
+            left: avatarX,
+            top: avatarY,
+            width: avatarW,
+            height: avatarH,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -99,9 +97,7 @@ export async function GET(request) {
           }}
         >
           <img
-            src={avatar}
-            width={avatarW}
-            height={avatarH}
+            src={avatarUrl}
             style={{
               width: "100%",
               height: "100%",
@@ -112,40 +108,44 @@ export async function GET(request) {
           />
         </div>
 
-        {/* @handle dans la zone prévue */}
+        {/* @HANDLE DANS SA VRAIE BARRE */}
         <div
           style={{
             position: "absolute",
-            left: `${handleX}px`,
-            top: `${handleY}px`,
+            left: handleX,
+            top: handleY,
+            width: handleW,
+            height: handleH,
             display: "flex",
             alignItems: "center",
+            paddingLeft: 16,
             color: "#ffffff",
-            fontSize: `${Math.round(58 * scale)}px`,
-            fontWeight: 700,
+            fontSize: 32,
+            fontWeight: 500,
             lineHeight: 1
           }}
         >
           @{h}
         </div>
 
-        {/* bandeau du bas */}
+        {/* BANDEAU PARTAGE — À GAUCHE, SANS RECOUVRIR LE HANDLE */}
         <div
           style={{
             position: "absolute",
-            left: `${bottomBarX}px`,
-            top: `${bottomBarY}px`,
-            width: `${bottomBarW}px`,
-            height: `${bottomBarH}px`,
+            left: 46,
+            bottom: 8,
+            width: 520,
+            height: 28,
             display: "flex",
             alignItems: "center",
-            paddingLeft: "12px",
-            paddingRight: "12px",
-            background: "rgba(0,0,0,0.55)",
+            paddingLeft: 10,
+            paddingRight: 10,
+            background: "rgba(24, 22, 21, 0.82)",
             color: "#ffffff",
-            fontSize: "18px",
-            fontWeight: 500,
-            lineHeight: 1
+            fontSize: 17,
+            fontWeight: 400,
+            lineHeight: 1,
+            whiteSpace: "nowrap"
           }}
         >
           @{h} is not going to Sui Basecamp 2026
@@ -153,8 +153,8 @@ export async function GET(request) {
       </div>
     ),
     {
-      width: outW,
-      height: outH
+      width: OUT_W,
+      height: OUT_H
     }
   );
 }
