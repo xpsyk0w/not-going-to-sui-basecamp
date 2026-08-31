@@ -205,18 +205,21 @@ sx -= 20;   // pousse un peu le perso vers la droite
 sy += 8;    // descend un peu
 
 // IMPORTANT : on garde la destination EXACTE de l'ancienne PFP
+const extraRight = 10;
+
 ctx.save();
 ctx.beginPath();
-ctx.rect(px, py, pw, ph);
+ctx.rect(px, py, pw + extraRight, ph);
 ctx.clip();
 
 ctx.drawImage(
   img,
   sx, sy, sw, sh,
-  px, py, pw, ph
+  px, py, pw + extraRight, ph
 );
 
 ctx.restore();
+        
       } catch (e) {
         console.error(
           "Could not load X avatar",
