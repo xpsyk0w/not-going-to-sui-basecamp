@@ -21,30 +21,22 @@ export async function GET(request) {
   const template = `${SITE_URL}/basecamp-template-V2.png`;
   const avatar = `https://unavatar.io/x/${encodeURIComponent(h)}`;
 
-  // Image OG finale
   const outW = 1200;
   const outH = 630;
 
-  // Dimensions originales du template
   const baseW = 1920;
   const baseH = 1080;
 
   const scaleX = outW / baseW;
   const scaleY = outH / baseH;
 
-  // ======================================================
-  // ZONE PFP
-  // ======================================================
-
+  // PFP
   const avatarX = 1005 * scaleX;
   const avatarY = 75 * scaleY;
   const avatarW = 817 * scaleX;
   const avatarH = 830 * scaleY;
 
-  // ======================================================
-  // ZONE @HANDLE
-  // ======================================================
-
+  // Barre @handle
   const handleBarX = 1005 * scaleX;
   const handleBarY = 905 * scaleY;
   const handleBarW = 817 * scaleX;
@@ -54,8 +46,8 @@ export async function GET(request) {
     (
       <div
         style={{
-          width: `${outW}px`,
-          height: `${outH}px`,
+          width: outW,
+          height: outH,
           position: "relative",
           display: "flex",
           overflow: "hidden",
@@ -63,7 +55,7 @@ export async function GET(request) {
           fontFamily: "Arial, Helvetica, sans-serif"
         }}
       >
-        {/* TEMPLATE COMPLET */}
+        {/* TEMPLATE */}
         <img
           src={template}
           width={outW}
@@ -72,20 +64,19 @@ export async function GET(request) {
             position: "absolute",
             left: 0,
             top: 0,
-            width: "100%",
-            height: "100%",
-            display: "block"
+            width: outW,
+            height: outH
           }}
         />
 
-        {/* PFP DYNAMIQUE */}
+        {/* PFP */}
         <div
           style={{
             position: "absolute",
-            left: `${avatarX}px`,
-            top: `${avatarY}px`,
-            width: `${avatarW}px`,
-            height: `${avatarH}px`,
+            left: avatarX,
+            top: avatarY,
+            width: avatarW,
+            height: avatarH,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -98,53 +89,52 @@ export async function GET(request) {
               width: "100%",
               height: "100%",
               objectFit: "contain",
-              objectPosition: "center",
-              display: "block"
+              objectPosition: "center"
             }}
           />
         </div>
 
-        {/* @HANDLE DANS LE RECTANGLE DU TEMPLATE */}
+        {/* HANDLE DANS LA BARRE DU TEMPLATE */}
         <div
           style={{
             position: "absolute",
-            left: `${handleBarX}px`,
-            top: `${handleBarY}px`,
-            width: `${handleBarW}px`,
-            height: `${handleBarH}px`,
+            left: handleBarX,
+            top: handleBarY,
+            width: handleBarW,
+            height: handleBarH,
             display: "flex",
             alignItems: "center",
-            paddingLeft: `${30 * scaleX}px`,
+            paddingLeft: 18,
             color: "#ffffff",
-            fontSize: `${58 * scaleY}px`,
+            fontSize: 34,
             fontWeight: 700,
             lineHeight: 1
           }}
         >
           @{h}
         </div>
-      </div>
 
-           {/* BANDEAU BAS POUR LA PREVIEW X */}
-      <div
-           style={{
-             position: "absolute",
-             left: "42px",
-             right: "42px",
-             bottom: "32px",
-             height: "42px",
-             display: "flex",
-             alignItems: "center",
-             paddingLeft: "12px",
-             background: "rgba(34, 31, 29, 0.82)",
-             color: "#ffffff",
-             fontSize: "20px",
-             fontWeight: 600,
-             lineHeight: 1
-        }}
-  >
-            @{h} is not going to Sui Basecamp 2026
-   </div>
+        {/* BANDEAU BAS POUR LA PREVIEW X */}
+        <div
+          style={{
+            position: "absolute",
+            left: 42,
+            bottom: 32,
+            width: 1116,
+            height: 42,
+            display: "flex",
+            alignItems: "center",
+            paddingLeft: 12,
+            background: "rgba(34,31,29,0.82)",
+            color: "#ffffff",
+            fontSize: 20,
+            fontWeight: 600,
+            lineHeight: 1
+          }}
+        >
+          @{h} is not going to Sui Basecamp 2026
+        </div>
+      </div>
     ),
     {
       width: outW,
