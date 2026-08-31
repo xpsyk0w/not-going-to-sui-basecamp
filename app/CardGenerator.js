@@ -157,7 +157,7 @@ ctx.fillRect(990, 60, 850, 830);
       fontSize > 90
        );
 
-     ctx.fillText(title, 86, 66);
+     ctx.fillText(title, 86, 70);
 
     // ======================================================
     // Dynamic X profile picture
