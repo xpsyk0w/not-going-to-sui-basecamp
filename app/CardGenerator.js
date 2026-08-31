@@ -162,11 +162,16 @@ export default function CardGenerator() {
   function post() {
     const text = "I'm not going to Sui Basecamp 2026.";
 
+    const shareUrl = new URL(window.location.href);
+
+    // Force X à recharger les metadata / OG au lieu du cache
+    shareUrl.searchParams.set("v", Date.now().toString());
+
     window.open(
-      `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-        text
-      )}&url=${encodeURIComponent(window.location.href)}`,
-      "_blank"
+    `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+      text
+    )}&url=${encodeURIComponent(shareUrl.toString())}`,
+    "_blank"
     );
   }
 
