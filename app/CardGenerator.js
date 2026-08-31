@@ -157,7 +157,7 @@ ctx.fillRect(990, 60, 850, 830);
       fontSize > 90
        );
 
-     ctx.fillText(title, 86, 70);
+     ctx.fillText(title, 86, 74);
 
     // ======================================================
     // Dynamic X profile picture
@@ -174,7 +174,7 @@ ctx.fillRect(990, 60, 850, 830);
         // Exact profile area from the original template
         const px = 1005;
 const py = 75;
-const pw = 824;
+const pw = 830;
 const ph = 830;
 
 const sourceRatio = img.width / img.height;
