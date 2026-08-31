@@ -219,15 +219,6 @@ ctx.restore();
     // Dynamic @handle bar
     // ======================================================
 
-    ctx.fillStyle =
-      "rgba(56, 50, 45, 0.92)";
-
-    ctx.fillRect(
-      1005,
-      905,
-      817,
-      105
-    );
 
     ctx.fillStyle = "#ffffff";
     ctx.textBaseline = "top";
