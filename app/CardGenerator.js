@@ -129,6 +129,10 @@ export default function CardGenerator() {
       H
     );
 
+    // Efface complètement l'ancienne PFP + ancien handle
+ctx.fillStyle = "#111111";
+ctx.fillRect(990, 60, 850, 830);
+
     // ======================================================
     // Replace ONLY "I'm going to"
     // Everything else remains from the original PNG
