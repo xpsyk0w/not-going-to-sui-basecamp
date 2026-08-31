@@ -129,9 +129,6 @@ export default function CardGenerator() {
       H
     );
 
-    // Efface complètement l'ancienne PFP + ancien handle
-ctx.fillStyle = "#111111";
-ctx.fillRect(990, 60, 850, 830);
 
     // ======================================================
     // Replace ONLY "I'm going to"
@@ -172,7 +169,7 @@ ctx.fillRect(990, 60, 850, 830);
           await loadImage(avatarData);
 
         // Exact profile area from the original template
-        const px = 1005;
+const px = 1005;
 const py = 75;
 const pw = 830;
 const ph = 830;
@@ -205,11 +202,23 @@ sw = newSw;
 sh = newSh;
 
 // reposition subject ONLY inside the frame
-sx -= 18;   // pousse un peu le perso vers la droite
-sy += 4;    // descend un peu
+sx -= 18;
+sy += 4;
 
-// IMPORTANT : on garde la destination EXACTE de l'ancienne PFP
+// wipe the old avatar + old handle area properly
 const extraRight = 10;
+const coverLeft = 15;
+const coverTop = 15;
+const coverRight = 20;
+const coverBottom = 120;
+
+ctx.fillStyle = "#111111";
+ctx.fillRect(
+  px - coverLeft,
+  py - coverTop,
+  pw + extraRight + coverLeft + coverRight,
+  ph + coverTop + coverBottom
+);
 
 ctx.save();
 ctx.beginPath();
