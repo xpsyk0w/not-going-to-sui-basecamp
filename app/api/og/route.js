@@ -2,6 +2,8 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 
+const SITE_URL = "https://not-going-to-sui-basecamp.vercel.app";
+
 function clean(value = "") {
   return String(value)
     .replace(/^@/, "")
@@ -10,49 +12,51 @@ function clean(value = "") {
 }
 
 export async function GET(request) {
-  const { searchParams, origin } = new URL(request.url);
+  const { searchParams } = new URL(request.url);
 
   const h = clean(searchParams.get("u"));
+
+  const template = `${SITE_URL}/basecamp-template-V2.png`;
   const avatar = `https://unavatar.io/x/${encodeURIComponent(h)}`;
-  const template = `${origin}/basecamp-template-V2.png`;
 
-  const W = 1200;
-  const H = 630;
+  // Taille finale preview X
+  const outW = 1200;
+  const outH = 630;
 
-  // base de travail = ton template principal en 1920x1080
+  // Taille du template principal
   const baseW = 1920;
   const baseH = 1080;
 
-  const scaleX = W / baseW;
-  const scaleY = H / baseH;
+  const scaleX = outW / baseW;
+  const scaleY = outH / baseH;
 
-  // zone PFP de ton template
+  // Zone PFP de ton template
   const avatarX = 1005 * scaleX;
   const avatarY = 75 * scaleY;
   const avatarW = 817 * scaleX;
-  const avatarH = 830 * scaleY;
+  const avatarH = 700 * scaleY;
 
-  // position du @handle dans la barre du template
+  // Texte @handle dans la barre prévue
   const handleX = 1035 * scaleX;
-  const handleY = 958 * scaleY;
+  const handleY = 795 * scaleY;
 
   return new ImageResponse(
     (
       <div
         style={{
-          width: "1200px",
-          height: "630px",
+          width: `${outW}px`,
+          height: `${outH}px`,
           position: "relative",
           display: "flex",
-          background: "#08192a",
-          overflow: "hidden"
+          overflow: "hidden",
+          background: "#0b1725"
         }}
       >
-        {/* template complet */}
+        {/* Template complet */}
         <img
           src={template}
-          width="1200"
-          height="630"
+          width={outW}
+          height={outH}
           style={{
             position: "absolute",
             inset: 0,
@@ -77,8 +81,6 @@ export async function GET(request) {
         >
           <img
             src={avatar}
-            width={`${avatarW}px`}
-            height={`${avatarH}px`}
             style={{
               width: "100%",
               height: "100%",
@@ -87,17 +89,18 @@ export async function GET(request) {
           />
         </div>
 
-        {/* handle */}
+        {/* @handle */}
         <div
           style={{
             position: "absolute",
             left: `${handleX}px`,
             top: `${handleY}px`,
+            display: "flex",
             color: "#ffffff",
             fontSize: "34px",
             fontWeight: 700,
             lineHeight: 1,
-            display: "flex"
+            fontFamily: "Arial"
           }}
         >
           @{h}
@@ -105,8 +108,8 @@ export async function GET(request) {
       </div>
     ),
     {
-      width: 1200,
-      height: 630
+      width: outW,
+      height: outH
     }
   );
 }
