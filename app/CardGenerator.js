@@ -174,7 +174,7 @@ ctx.fillRect(990, 60, 850, 830);
         // Exact profile area from the original template
         const px = 1005;
 const py = 75;
-const pw = 830;
+const pw = 828;
 const ph = 830;
 
 const sourceRatio = img.width / img.height;
@@ -206,7 +206,7 @@ sh = newSh;
 
 // reposition subject ONLY inside the frame
 sx -= 20;   // pousse un peu le perso vers la droite
-sy += 8;    // descend un peu
+sy += 6;    // descend un peu
 
 // IMPORTANT : on garde la destination EXACTE de l'ancienne PFP
 const extraRight = 10;
