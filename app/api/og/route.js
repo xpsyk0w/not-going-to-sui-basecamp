@@ -15,7 +15,6 @@ function clean(value = "") {
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
-
   const h = clean(searchParams.get("u"));
 
   const template = `${SITE_URL}/basecamp-template-V2.png`;
@@ -24,11 +23,8 @@ export async function GET(request) {
   const outW = 1200;
   const outH = 630;
 
-  const baseW = 1920;
-  const baseH = 1080;
-
-  const scaleX = outW / baseW;
-  const scaleY = outH / baseH;
+  const scaleX = outW / 1920;
+  const scaleY = outH / 1080;
 
   // PFP
   const avatarX = 1005 * scaleX;
@@ -36,11 +32,11 @@ export async function GET(request) {
   const avatarW = 817 * scaleX;
   const avatarH = 830 * scaleY;
 
-  // Barre @handle
-  const handleBarX = 1005 * scaleX;
-  const handleBarY = 905 * scaleY;
-  const handleBarW = 817 * scaleX;
-  const handleBarH = 105 * scaleY;
+  // Barre du @handle déjà présente dans le template
+  const handleX = 1005 * scaleX;
+  const handleY = 905 * scaleY;
+  const handleW = 817 * scaleX;
+  const handleH = 105 * scaleY;
 
   return new ImageResponse(
     (
@@ -62,10 +58,9 @@ export async function GET(request) {
           height={outH}
           style={{
             position: "absolute",
-            left: 0,
-            top: 0,
-            width: outW,
-            height: outH
+            inset: 0,
+            width: "100%",
+            height: "100%"
           }}
         />
 
@@ -94,14 +89,14 @@ export async function GET(request) {
           />
         </div>
 
-        {/* HANDLE DANS LA BARRE DU TEMPLATE */}
+        {/* @HANDLE SOUS LA PFP */}
         <div
           style={{
             position: "absolute",
-            left: handleBarX,
-            top: handleBarY,
-            width: handleBarW,
-            height: handleBarH,
+            left: handleX,
+            top: handleY,
+            width: handleW,
+            height: handleH,
             display: "flex",
             alignItems: "center",
             paddingLeft: 18,
@@ -114,21 +109,21 @@ export async function GET(request) {
           @{h}
         </div>
 
-        {/* BANDEAU BAS POUR LA PREVIEW X */}
+        {/* BANDEAU DE PARTAGE — plus fin et plus haut */}
         <div
           style={{
             position: "absolute",
-            left: 42,
-            bottom: 32,
-            width: 1116,
-            height: 42,
+            left: 46,
+            right: 46,
+            bottom: 48,
+            height: 30,
             display: "flex",
             alignItems: "center",
-            paddingLeft: 12,
-            background: "rgba(34,31,29,0.82)",
+            paddingLeft: 10,
+            background: "rgba(28, 27, 26, 0.82)",
             color: "#ffffff",
-            fontSize: 20,
-            fontWeight: 600,
+            fontSize: 17,
+            fontWeight: 500,
             lineHeight: 1
           }}
         >
