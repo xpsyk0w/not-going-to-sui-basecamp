@@ -134,26 +134,26 @@ export default function CardGenerator() {
     // Everything else remains from the original PNG
     // ======================================================
 
-    ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(72, 66, 790, 145);
 
-    ctx.fillRect(
-      72,
-      66,
-      790,
-      150
-    );
+      ctx.fillStyle = "#000000";
+      ctx.textBaseline = "top";
 
-    ctx.fillStyle = "#000000";
-    ctx.textBaseline = "top";
+      const title = "I’m not going to";
+      const maxWidth = 890;
 
-    ctx.font =
-      "900 124px Arial, Helvetica, sans-serif";
+      let fontSize = 116;
 
-    ctx.fillText(
-      "I’m not going to",
-      84,
-      66
-    );
+       do {
+      ctx.font = `900 ${fontSize}px Arial, Helvetica, sans-serif`;
+       fontSize -= 2;
+      } while (
+      ctx.measureText(title).width > maxWidth &&
+      fontSize > 90
+       );
+
+     ctx.fillText(title, 86, 66);
 
     // ======================================================
     // Dynamic X profile picture
@@ -202,7 +202,7 @@ export default function CardGenerator() {
         sh = newSh;
 
         // move avatar slightly inside the frame
-        sx -= 18;   // move avatar a bit to the right
+        sx -= 25;   // move avatar a bit to the right
         sy += 10;   // move avatar a bit lower
         
         ctx.drawImage(
