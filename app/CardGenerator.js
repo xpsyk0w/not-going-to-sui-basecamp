@@ -145,8 +145,8 @@ export default function CardGenerator() {
         // Exact profile area from the original template
 const px = 1005;
 const py = 75;
-const pw = 830;
-const ph = 830;
+const pw = 817;
+const ph = 700;
 
 const sourceRatio = img.width / img.height;
 const targetRatio = pw / ph;
@@ -156,7 +156,7 @@ let sy = 0;
 let sw = img.width;
 let sh = img.height;
 
-// cover crop
+// Cover crop
 if (sourceRatio > targetRatio) {
   sw = img.height * targetRatio;
   sx = (img.width - sw) / 2;
@@ -165,44 +165,38 @@ if (sourceRatio > targetRatio) {
   sy = (img.height - sh) / 2;
 }
 
-// zoom
+// léger zoom
 const zoom = 1.15;
+
 const newSw = sw / zoom;
 const newSh = sh / zoom;
 
 sx += (sw - newSw) / 2;
 sy += (sh - newSh) / 2;
+
 sw = newSw;
 sh = newSh;
 
-// reposition subject ONLY inside the frame
+// Ajustement du personnage dans son cadre
 sx -= 18;
 sy += 4;
 
-// wipe the old avatar + old handle area properly
-const extraRight = 10;
-const coverLeft = 15;
-const coverTop = 15;
-const coverRight = 20;
-const coverBottom = 120;
-
-ctx.fillStyle = "#111111";
-ctx.fillRect(
-  px - coverLeft,
-  py - coverTop,
-  pw + extraRight + coverLeft + coverRight,
-  ph + coverTop + coverBottom
-);
-
+// La PFP remplit UNIQUEMENT la zone noire du template
 ctx.save();
 ctx.beginPath();
-ctx.rect(px, py, pw + extraRight, ph);
+ctx.rect(px, py, pw, ph);
 ctx.clip();
 
 ctx.drawImage(
   img,
-  sx, sy, sw, sh,
-  px, py, pw + extraRight, ph
+  sx,
+  sy,
+  sw,
+  sh,
+  px,
+  py,
+  pw,
+  ph
 );
 
 ctx.restore();
@@ -229,7 +223,7 @@ ctx.restore();
     ctx.fillText(
       "@" + h,
       1035,
-      925
+      795
     );
   }
 
