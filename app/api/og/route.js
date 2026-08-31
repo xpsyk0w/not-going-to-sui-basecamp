@@ -13,34 +13,27 @@ function clean(value = "") {
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
-
   const h = clean(searchParams.get("u"));
 
   const template = `${SITE_URL}/basecamp-template-V2.png`;
   const avatar = `https://unavatar.io/x/${encodeURIComponent(h)}`;
 
-  // Taille finale preview X
+  // sortie X
   const outW = 1200;
   const outH = 630;
 
-  // Taille du template principal
+  // base du template
   const baseW = 1920;
   const baseH = 1080;
 
   const scaleX = outW / baseW;
   const scaleY = outH / baseH;
 
-  // Zone PFP de ton template
+  // zone image droite
   const avatarX = 1005 * scaleX;
   const avatarY = 75 * scaleY;
   const avatarW = 817 * scaleX;
   const avatarH = 700 * scaleY;
-
-  // Texte @handle dans la barre prévue
-  const handleBarX = 1005 * scaleX;
-  const handleBarY = 905 * scaleY;
-  const handleBarW = 817 * scaleX;
-  const handleBarH = 105 * scaleY;
 
   return new ImageResponse(
     (
@@ -51,10 +44,11 @@ export async function GET(request) {
           position: "relative",
           display: "flex",
           overflow: "hidden",
-          background: "#0b1725"
+          background: "#08192a",
+          fontFamily: "Arial"
         }}
       >
-        {/* Template complet */}
+        {/* fond template */}
         <img
           src={template}
           width={outW}
@@ -67,7 +61,7 @@ export async function GET(request) {
           }}
         />
 
-        {/* PFP */}
+        {/* pfp remplie comme dans l’original */}
         <div
           style={{
             position: "absolute",
@@ -76,41 +70,42 @@ export async function GET(request) {
             width: `${avatarW}px`,
             height: `${avatarH}px`,
             display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
             overflow: "hidden"
           }}
         >
           <img
             src={avatar}
+            width={avatarW}
+            height={avatarH}
             style={{
               width: "100%",
               height: "100%",
-              objectFit: "contain"
+              objectFit: "cover"
             }}
           />
         </div>
 
-        {/* @handle */}
-       <div
-        style={{
-        position: "absolute",
-        left: `${handleBarX}px`,
-        top: `${handleBarY}px`,
-        width: `${handleBarW}px`,
-        height: `${handleBarH}px`,
-        display: "flex",
-        alignItems: "center",
-        paddingLeft: `${30 * scaleX}px`,
-        color: "#ffffff",
-        fontSize: `${58 * scaleY}px`,
-        fontWeight: 700,
-        lineHeight: 1,
-        fontFamily: "Arial"
-  }}
->
-  @{h}
-</div>
+        {/* bandeau bas façon original */}
+        <div
+          style={{
+            position: "absolute",
+            left: "42px",
+            right: "42px",
+            bottom: "36px",
+            height: "42px",
+            display: "flex",
+            alignItems: "center",
+            padding: "0 14px",
+            background: "rgba(37, 32, 30, 0.82)",
+            color: "#ffffff",
+            fontSize: "24px",
+            fontWeight: 700,
+            lineHeight: 1,
+            whiteSpace: "nowrap"
+          }}
+        >
+          @{h} is not going to Sui Basecamp 2026
+        </div>
       </div>
     ),
     {
