@@ -15,6 +15,7 @@ function clean(value = "") {
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
+
   const h = clean(searchParams.get("u"));
 
   const template = `${SITE_URL}/basecamp-template-V2.png`;
@@ -23,20 +24,31 @@ export async function GET(request) {
   const outW = 1200;
   const outH = 630;
 
-  const scaleX = outW / 1920;
-  const scaleY = outH / 1080;
+  const baseW = 1920;
+  const baseH = 1080;
 
+  const scaleX = outW / baseW;
+  const scaleY = outH / baseH;
+
+  // ======================================================
   // PFP
+  // y 75 -> 775
+  // ======================================================
+
   const avatarX = 1005 * scaleX;
   const avatarY = 75 * scaleY;
   const avatarW = 817 * scaleX;
-  const avatarH = 830 * scaleY;
+  const avatarH = 700 * scaleY;
 
-  // Barre du @handle déjà présente dans le template
-  const handleX = 1005 * scaleX;
-  const handleY = 905 * scaleY;
-  const handleW = 817 * scaleX;
-  const handleH = 105 * scaleY;
+  // ======================================================
+  // @HANDLE
+  // y 775 -> 870
+  // ======================================================
+
+  const handleBarX = 1005 * scaleX;
+  const handleBarY = 775 * scaleY;
+  const handleBarW = 817 * scaleX;
+  const handleBarH = 95 * scaleY;
 
   return new ImageResponse(
     (
@@ -58,7 +70,8 @@ export async function GET(request) {
           height={outH}
           style={{
             position: "absolute",
-            inset: 0,
+            left: 0,
+            top: 0,
             width: "100%",
             height: "100%"
           }}
@@ -89,19 +102,19 @@ export async function GET(request) {
           />
         </div>
 
-        {/* @HANDLE SOUS LA PFP */}
+        {/* @HANDLE DANS LA BARRE DU TEMPLATE */}
         <div
           style={{
             position: "absolute",
-            left: handleX,
-            top: handleY,
-            width: handleW,
-            height: handleH,
+            left: handleBarX,
+            top: handleBarY,
+            width: handleBarW,
+            height: handleBarH,
             display: "flex",
             alignItems: "center",
-            paddingLeft: 18,
+            paddingLeft: `${24 * scaleX}px`,
             color: "#ffffff",
-            fontSize: 34,
+            fontSize: `${58 * scaleY}px`,
             fontWeight: 700,
             lineHeight: 1
           }}
@@ -109,18 +122,18 @@ export async function GET(request) {
           @{h}
         </div>
 
-        {/* BANDEAU DE PARTAGE — plus fin et plus haut */}
+        {/* BANDEAU DE PARTAGE */}
         <div
           style={{
             position: "absolute",
             left: 46,
             right: 46,
-            bottom: 48,
+            bottom: 32,
             height: 30,
             display: "flex",
             alignItems: "center",
             paddingLeft: 10,
-            background: "rgba(28, 27, 26, 0.82)",
+            background: "rgba(28,27,26,0.82)",
             color: "#ffffff",
             fontSize: 17,
             fontWeight: 500,
