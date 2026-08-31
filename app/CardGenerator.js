@@ -126,7 +126,9 @@ export default function CardGenerator() {
         const dw = img.width * scale;
         const dh = img.height * scale;
 
-        const dx = px + (pw - dw) / 2;
+        const offsetX = 20; // décale vers la droite
+        const offsetY = 0;  // si besoin plus tard
+        const dx = px + (pw - dw) / 2 + offsetX;
         const dy = py + (ph - dh) / 2;
 
         ctx.drawImage(img, dx, dy, dw, dh);
