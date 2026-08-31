@@ -11,9 +11,9 @@ function cleanHandle(value = "") {
 }
 
 export async function generateMetadata({ searchParams }) {
-  const rawHandle = Array.isArray(searchParams?.u)
-    ? searchParams.u[0]
-    : searchParams?.u || "";
+  const rawV = Array.isArray(searchParams?.v)
+    ? searchParams.v[0]
+    : searchParams?.v || "1";
 
   const handle = cleanHandle(rawHandle);
 
@@ -30,8 +30,8 @@ export async function generateMetadata({ searchParams }) {
     : SITE_URL;
 
   const ogImage = handle
-    ? `${SITE_URL}/api/og?u=${encodeURIComponent(handle)}`
-    : `${SITE_URL}/api/og`;
+     ? `${SITE_URL}/api/og?u=${encodeURIComponent(handle)}&v=${encodeURIComponent(rawV)}`
+     : `${SITE_URL}/api/og?v=${encodeURIComponent(rawV)}`;
 
   return {
     metadataBase: new URL(SITE_URL),
