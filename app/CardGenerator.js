@@ -168,9 +168,9 @@ export default function CardGenerator() {
           await loadImage(avatarData);
 
         // Exact profile area from the original template
-        const px = 1005;
+        const px = 1035;
         const py = 75;
-        const pw = 817;
+        const pw = 787;
         const ph = 830;
 
         const sourceRatio = img.width / img.height;
