@@ -100,10 +100,10 @@ export default function CardGenerator() {
     let template;
 
     try {
-      template = await loadImage("/basecamp-template.png");
+      template = await loadImage("/basecamp-template-V2.png");
     } catch (e) {
       console.error(
-        "Could not load /basecamp-template.png",
+        "Could not load /basecamp-template-V2.png",
         e
       );
 
