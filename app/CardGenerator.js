@@ -174,7 +174,7 @@ ctx.fillRect(990, 60, 850, 830);
         // Exact profile area from the original template
         const px = 1005;
 const py = 75;
-const pw = 817;
+const pw = 824;
 const ph = 830;
 
 const sourceRatio = img.width / img.height;
