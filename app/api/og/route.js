@@ -15,99 +15,122 @@ function clean(value = "") {
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
-
   const h = clean(searchParams.get("u"));
 
-  const templateUrl = `${SITE_URL}/basecamp-template-V2.png`;
-  const avatarUrl = `https://unavatar.io/x/${encodeURIComponent(h)}`;
+  const template = `${SITE_URL}/basecamp-template-V2.png`;
+  const avatar = `https://unavatar.io/x/${encodeURIComponent(h)}`;
 
-  // OG X
   const outW = 1200;
   const outH = 630;
 
-  // Template original : 1920 × 1080
-  // On le passe en 1200 × 675 sans déformation,
-  // puis on crop légèrement en haut/bas.
-  const scale = 1200 / 1920;
+  const baseW = 1920;
+  const baseH = 1080;
 
+  const scale = outW / baseW;
+
+  // template 1920x1080 affiché en 1200x675 puis légèrement remonté
   const templateW = 1200;
   const templateH = 675;
-
   const templateX = 0;
-  const templateY = -22.5;
+  const templateY = -22;
 
-  // Zone noire exacte de la PFP dans ton template
-  const avatarX = 1015 * scale;
-  const avatarY = 67 * scale + templateY;
-  const avatarW = 833 * scale;
-  const avatarH = 835 * scale;
+  // zone PFP
+  const avatarX = 1005 * scale;
+  const avatarY = 75 * scale + templateY;
+  const avatarW = 817 * scale;
+  const avatarH = 700 * scale;
+
+  // zone @handle à droite (on la garde)
+  const handleX = 1035 * scale;
+  const handleY = 795 * scale + templateY;
 
   return new ImageResponse(
     (
       <div
         style={{
-          width: outW,
-          height: outH,
+          width: `${outW}px`,
+          height: `${outH}px`,
           position: "relative",
-          display: "flex",
           overflow: "hidden",
-          background: "#05070b",
+          display: "flex",
+          background: "#08192a",
           fontFamily: "Arial, Helvetica, sans-serif"
         }}
       >
-        {/* TEMPLATE */}
+        {/* template */}
         <img
-          src={templateUrl}
+          src={template}
+          width={templateW}
+          height={templateH}
           style={{
             position: "absolute",
-            left: templateX,
-            top: templateY,
-            width: templateW,
-            height: templateH,
+            left: `${templateX}px`,
+            top: `${templateY}px`,
+            width: `${templateW}px`,
+            height: `${templateH}px`,
             display: "block"
           }}
         />
 
-        {/* PFP DYNAMIQUE */}
+        {/* PFP */}
         <div
           style={{
             position: "absolute",
-            left: avatarX,
-            top: avatarY,
-            width: avatarW,
-            height: avatarH,
-            display: "flex",
+            left: `${avatarX}px`,
+            top: `${avatarY}px`,
+            width: `${avatarW}px`,
+            height: `${avatarH}px`,
             overflow: "hidden",
+            display: "flex",
             background: "#000"
           }}
         >
           <img
-            src={avatarUrl}
+            src={avatar}
+            width={avatarW}
+            height={avatarH}
             style={{
               width: "100%",
               height: "100%",
               objectFit: "cover",
-              objectPosition: "center",
+              objectPosition: "56% 48%",
               display: "block"
             }}
           />
         </div>
 
-        {/* BANDEAU COMME SUR LE SITE ORIGINAL */}
+        {/* @handle à droite : ON LE GARDE */}
         <div
           style={{
             position: "absolute",
-            left: 46,
-            right: 46,
-            bottom: 27,
-            height: 34,
+            left: `${handleX}px`,
+            top: `${handleY}px`,
             display: "flex",
             alignItems: "center",
-            paddingLeft: 10,
-            paddingRight: 10,
-            background: "rgba(27, 25, 24, 0.86)",
             color: "#ffffff",
-            fontSize: 18,
+            fontSize: "28px",
+            fontWeight: 500,
+            lineHeight: 1
+          }}
+        >
+          @{h}
+        </div>
+
+        {/* bandeau du bas : juste DESCENDU */}
+        <div
+          style={{
+            position: "absolute",
+            left: "52px",
+            right: "52px",
+            bottom: "10px",
+            height: "30px",
+            display: "flex",
+            alignItems: "center",
+            paddingLeft: "10px",
+            paddingRight: "10px",
+            background: "rgba(27,25,24,0.82)",
+            color: "#ffffff",
+            fontSize: "16px",
             fontWeight: 500,
             lineHeight: 1,
             whiteSpace: "nowrap"
