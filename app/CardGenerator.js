@@ -169,54 +169,54 @@ export default function CardGenerator() {
 
         // Exact profile area from the original template
         const px = 1005;
-        const py = 75;
-        const pw = 817;
-        const ph = 830;
+const py = 75;
+const pw = 817;
+const ph = 830;
 
-        // small bleed to fully cover old avatar edges
-        const bleed = 14;
+const sourceRatio = img.width / img.height;
+const targetRatio = pw / ph;
 
-        const sourceRatio = img.width / img.height;
-        const targetRatio = pw / ph;
+let sx = 0;
+let sy = 0;
+let sw = img.width;
+let sh = img.height;
 
-        let sx = 0;
-        let sy = 0;
+// cover crop
+if (sourceRatio > targetRatio) {
+  sw = img.height * targetRatio;
+  sx = (img.width - sw) / 2;
+} else {
+  sh = img.width / targetRatio;
+  sy = (img.height - sh) / 2;
+}
 
-        let sw = img.width;
-        let sh = img.height;
+// zoom
+const zoom = 1.15;
+const newSw = sw / zoom;
+const newSh = sh / zoom;
 
-        // Cover crop
-        if (sourceRatio > targetRatio) {
-        sw = img.height * targetRatio;
-        sx = (img.width - sw) / 2;
-       } else {
-        sh = img.width / targetRatio;
-        sy = (img.height - sh) / 2;
- }
+sx += (sw - newSw) / 2;
+sy += (sh - newSh) / 2;
+sw = newSw;
+sh = newSh;
 
-        // Slight zoom in
-        const zoom = 1.18;
-        const newSw = sw / zoom;
-        const newSh = sh / zoom;
- 
-        sx += (sw - newSw) / 2;
-        sy += (sh - newSh) / 2;
-        sw = newSw;
-        sh = newSh;
+// reposition subject ONLY inside the frame
+sx -= 20;   // pousse un peu le perso vers la droite
+sy += 8;    // descend un peu
 
-        ctx.drawImage(
-        img,
+// IMPORTANT : on garde la destination EXACTE de l'ancienne PFP
+ctx.save();
+ctx.beginPath();
+ctx.rect(px, py, pw, ph);
+ctx.clip();
 
-        sx,
-        sy,
-        sw,
-        sh,
+ctx.drawImage(
+  img,
+  sx, sy, sw, sh,
+  px, py, pw, ph
+);
 
-        px - bleed,
-        py,
-        pw + bleed * 2,
-        ph
-  );
+ctx.restore();
       } catch (e) {
         console.error(
           "Could not load X avatar",
