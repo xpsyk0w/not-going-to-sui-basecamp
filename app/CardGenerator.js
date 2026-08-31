@@ -173,6 +173,9 @@ export default function CardGenerator() {
         const pw = 817;
         const ph = 830;
 
+        // small bleed to fully cover old avatar edges
+        const bleed = 14;
+
         const sourceRatio = img.width / img.height;
         const targetRatio = pw / ph;
 
@@ -201,26 +204,19 @@ export default function CardGenerator() {
         sw = newSw;
         sh = newSh;
 
-        // move avatar slightly inside the frame
-        sx -= 25;   // move avatar a bit to the right
-        sy += 10;   // move avatar a bit lower
-
-        ctx.fillStyle = "#cfc9ef";
-        ctx.fillRect(px, py, pw, ph);
-        
         ctx.drawImage(
-          img,
+        img,
 
-          sx,
-          sy,
-          sw,
-          sh,
+        sx,
+        sy,
+        sw,
+        sh,
 
-          px,
-          py,
-          pw,
-          ph
-        );
+        px - bleed,
+        py,
+        pw + bleed * 2,
+        ph
+  );
       } catch (e) {
         console.error(
           "Could not load X avatar",
