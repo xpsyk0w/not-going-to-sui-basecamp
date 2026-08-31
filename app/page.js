@@ -3,6 +3,8 @@ import "./styles.css";
 
 const SITE_URL = "https://not-going-to-sui-basecamp.vercel.app";
 
+export const dynamic = "force-dynamic";
+
 function cleanHandle(value = "") {
   return String(value)
     .replace(/^@/, "")
@@ -10,28 +12,56 @@ function cleanHandle(value = "") {
     .slice(0, 15);
 }
 
-export async function generateMetadata({ searchParams }) {
-  const rawV = Array.isArray(searchParams?.v)
-    ? searchParams.v[0]
-    : searchParams?.v || "1";
+function cleanVersion(value = "") {
+  return String(value)
+    .replace(/[^0-9]/g, "")
+    .slice(0, 20);
+}
 
-  const handle = cleanHandle(rawHandle);
+export async function generateMetadata({ searchParams }) {
+  // Compatible avec les différentes versions de Next
+  const params = await searchParams;
+
+  const rawU = Array.isArray(params?.u)
+    ? params.u[0]
+    : params?.u || "";
+
+  const rawV = Array.isArray(params?.v)
+    ? params.v[0]
+    : params?.v || "";
+
+  const handle = cleanHandle(rawU);
+  const version = cleanVersion(rawV);
 
   const title = handle
     ? `@${handle} is not going to Sui Basecamp 2026`
     : "I'm not going to Sui Basecamp 2026";
 
   const description = handle
-    ? `@${handle} won't be at Sui Basecamp 2026. Make your own card and let everyone know you're not going.`
-    : "Make your own card and let everyone know you're not going to Sui Basecamp 2026.";
+    ? `@${handle} won't be at Sui Basecamp 2026. Make your own card.`
+    : "Make a card to let everyone know you're not going to Sui Basecamp 2026.";
 
-  const pageUrl = handle
-    ? `${SITE_URL}/?u=${encodeURIComponent(handle)}`
-    : SITE_URL;
+  // URL de la page partagée
+  const pageUrl = new URL("/", SITE_URL);
 
-  const ogImage = handle
-     ? `${SITE_URL}/api/og?u=${encodeURIComponent(handle)}&v=${encodeURIComponent(rawV)}`
-     : `${SITE_URL}/api/og?v=${encodeURIComponent(rawV)}`;
+  if (handle) {
+    pageUrl.searchParams.set("u", handle);
+  }
+
+  if (version) {
+    pageUrl.searchParams.set("v", version);
+  }
+
+  // URL de l'image OG
+  const ogUrl = new URL("/api/og", SITE_URL);
+
+  if (handle) {
+    ogUrl.searchParams.set("u", handle);
+  }
+
+  if (version) {
+    ogUrl.searchParams.set("v", version);
+  }
 
   return {
     metadataBase: new URL(SITE_URL),
@@ -39,19 +69,15 @@ export async function generateMetadata({ searchParams }) {
     title,
     description,
 
-    alternates: {
-      canonical: pageUrl
-    },
-
     openGraph: {
       title,
       description,
-      url: pageUrl,
-      siteName: "Not Going To Sui Basecamp",
       type: "website",
+      url: pageUrl.toString(),
+      siteName: "Not Going to Sui Basecamp",
       images: [
         {
-          url: ogImage,
+          url: ogUrl.toString(),
           width: 1200,
           height: 630,
           alt: title
@@ -63,7 +89,7 @@ export async function generateMetadata({ searchParams }) {
       card: "summary_large_image",
       title,
       description,
-      images: [ogImage]
+      images: [ogUrl.toString()]
     }
   };
 }
