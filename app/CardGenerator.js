@@ -157,7 +157,7 @@ ctx.fillRect(990, 60, 850, 830);
       fontSize > 90
        );
 
-     ctx.fillText(title, 86, 74);
+     ctx.fillText(title, 86, 78);
 
     // ======================================================
     // Dynamic X profile picture
@@ -206,7 +206,7 @@ sh = newSh;
 
 // reposition subject ONLY inside the frame
 sx -= 20;   // pousse un peu le perso vers la droite
-sy += 6;    // descend un peu
+sy += 4;    // descend un peu
 
 // IMPORTANT : on garde la destination EXACTE de l'ancienne PFP
 const extraRight = 10;
