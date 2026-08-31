@@ -131,32 +131,6 @@ export default function CardGenerator() {
 
 
     // ======================================================
-    // Replace ONLY "I'm going to"
-    // Everything else remains from the original PNG
-    // ======================================================
-
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(72, 66, 790, 145);
-
-      ctx.fillStyle = "#000000";
-      ctx.textBaseline = "top";
-
-      const title = "I’m not going to";
-      const maxWidth = 890;
-
-      let fontSize = 116;
-
-       do {
-      ctx.font = `900 ${fontSize}px Arial, Helvetica, sans-serif`;
-       fontSize -= 2;
-      } while (
-      ctx.measureText(title).width > maxWidth &&
-      fontSize > 90
-       );
-
-     ctx.fillText(title, 86, 80);
-
-    // ======================================================
     // Dynamic X profile picture
     // ======================================================
 
