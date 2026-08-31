@@ -138,8 +138,8 @@ export default function CardGenerator() {
 
     ctx.fillRect(
       72,
-      56,
-      800,
+      66,
+      790,
       150
     );
 
@@ -152,7 +152,7 @@ export default function CardGenerator() {
     ctx.fillText(
       "I’m not going to",
       84,
-      54
+      66
     );
 
     // ======================================================
@@ -200,6 +200,11 @@ export default function CardGenerator() {
         sy += (sh - newSh) / 2;
         sw = newSw;
         sh = newSh;
+
+        // move avatar slightly inside the frame
+        sx -= 18;   // move avatar a bit to the right
+        sy += 10;   // move avatar a bit lower
+        
         ctx.drawImage(
           img,
 
