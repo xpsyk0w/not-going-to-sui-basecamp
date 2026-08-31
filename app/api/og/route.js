@@ -15,7 +15,6 @@ export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const h = clean(searchParams.get("u"));
 
-  // IMPORTANT : on utilise bien le NOUVEAU template clean
   const template = `${SITE_URL}/basecamp-template-V2.png`;
   const avatar = `https://unavatar.io/x/${encodeURIComponent(h)}`;
 
@@ -28,15 +27,17 @@ export async function GET(request) {
   const scaleX = outW / baseW;
   const scaleY = outH / baseH;
 
-  // Zone PFP du template V2
+  // zone photo du template
   const avatarX = 1005 * scaleX;
   const avatarY = 75 * scaleY;
   const avatarW = 817 * scaleX;
   const avatarH = 700 * scaleY;
 
-  // Barre du @handle déjà présente dans ton template
-  const handleX = 1035 * scaleX;
-  const handleY = 795 * scaleY;
+  // zone texte du handle (dans la barre du bas de ton template)
+  const handleBarX = 1005 * scaleX;
+  const handleBarY = 775 * scaleY;
+  const handleBarW = 817 * scaleX;
+  const handleBarH = 95 * scaleY;
 
   return new ImageResponse(
     (
@@ -45,22 +46,24 @@ export async function GET(request) {
           width: `${outW}px`,
           height: `${outH}px`,
           position: "relative",
-          display: "flex",
           overflow: "hidden",
+          display: "flex",
           background: "#08192a",
           fontFamily: "Arial, Helvetica, sans-serif"
         }}
       >
-        {/* Template clean */}
+        {/* template V2 clean */}
         <img
           src={template}
           width={outW}
           height={outH}
           style={{
             position: "absolute",
-            inset: 0,
+            left: 0,
+            top: 0,
             width: "100%",
-            height: "100%"
+            height: "100%",
+            display: "block"
           }}
         />
 
@@ -84,21 +87,25 @@ export async function GET(request) {
               width: "100%",
               height: "100%",
               objectFit: "cover",
-              objectPosition: "56% 48%"
+              objectPosition: "56% 48%",
+              display: "block"
             }}
           />
         </div>
 
-        {/* @handle */}
+        {/* @handle dans la barre prévue */}
         <div
           style={{
             position: "absolute",
-            left: `${handleX}px`,
-            top: `${handleY}px`,
+            left: `${handleBarX}px`,
+            top: `${handleBarY}px`,
+            width: `${handleBarW}px`,
+            height: `${handleBarH}px`,
             display: "flex",
             alignItems: "center",
+            paddingLeft: `${22 * scaleX}px`,
             color: "#ffffff",
-            fontSize: `${58 * scaleY}px`,
+            fontSize: `${34 * scaleY}px`,
             fontWeight: 700,
             lineHeight: 1
           }}
