@@ -37,8 +37,10 @@ export async function GET(request) {
   const avatarH = 700 * scaleY;
 
   // Texte @handle dans la barre prévue
-  const handleX = 1035 * scaleX;
-  const handleY = 795 * scaleY;
+  const handleBarX = 1005 * scaleX;
+  const handleBarY = 905 * scaleY;
+  const handleBarW = 817 * scaleX;
+  const handleBarH = 105 * scaleY;
 
   return new ImageResponse(
     (
@@ -90,21 +92,25 @@ export async function GET(request) {
         </div>
 
         {/* @handle */}
-        <div
-          style={{
-            position: "absolute",
-            left: `${handleX}px`,
-            top: `${handleY}px`,
-            display: "flex",
-            color: "#ffffff",
-            fontSize: "34px",
-            fontWeight: 700,
-            lineHeight: 1,
-            fontFamily: "Arial"
-          }}
-        >
-          @{h}
-        </div>
+       <div
+        style={{
+        position: "absolute",
+        left: `${handleBarX}px`,
+        top: `${handleBarY}px`,
+        width: `${handleBarW}px`,
+        height: `${handleBarH}px`,
+        display: "flex",
+        alignItems: "center",
+        paddingLeft: `${30 * scaleX}px`,
+        color: "#ffffff",
+        fontSize: `${58 * scaleY}px`,
+        fontWeight: 700,
+        lineHeight: 1,
+        fontFamily: "Arial"
+  }}
+>
+  @{h}
+</div>
       </div>
     ),
     {
