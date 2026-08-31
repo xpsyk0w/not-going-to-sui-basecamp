@@ -14,10 +14,8 @@ function cleanHandle(value) {
 function loadImage(src) {
   return new Promise((resolve, reject) => {
     const img = new Image();
-
     img.onload = () => resolve(img);
     img.onerror = reject;
-
     img.src = src;
   });
 }
@@ -27,16 +25,6 @@ export default function CardGenerator() {
   const [handle, setHandle] = useState("");
 
   const canvasRef = useRef(null);
-
-  useEffect(() => {
-    if (!handle) return;
-
-    const timer = setTimeout(() => {
-      drawCard(handle);
-    }, 50);
-
-    return () => clearTimeout(timer);
-  }, [handle]);
 
   useEffect(() => {
     const u = cleanHandle(
@@ -49,6 +37,16 @@ export default function CardGenerator() {
     }
   }, []);
 
+  useEffect(() => {
+    if (!handle) return;
+
+    const timer = setTimeout(() => {
+      drawCard(handle);
+    }, 50);
+
+    return () => clearTimeout(timer);
+  }, [handle]);
+
   async function fetchAvatarDataUrl(handle) {
     const urls = [
       `https://unavatar.io/x/${encodeURIComponent(handle)}`,
@@ -57,20 +55,15 @@ export default function CardGenerator() {
 
     for (const url of urls) {
       try {
-        const r = await fetch(url, {
-          mode: "cors"
-        });
-
+        const r = await fetch(url, { mode: "cors" });
         if (!r.ok) continue;
 
         const blob = await r.blob();
 
         const dataUrl = await new Promise((resolve, reject) => {
           const fr = new FileReader();
-
           fr.onload = () => resolve(fr.result);
           fr.onerror = reject;
-
           fr.readAsDataURL(blob);
         });
 
@@ -83,7 +76,6 @@ export default function CardGenerator() {
 
   async function drawCard(h) {
     const canvas = canvasRef.current;
-
     if (!canvas) return;
 
     const ctx = canvas.getContext("2d");
@@ -96,173 +88,82 @@ export default function CardGenerator() {
 
     ctx.clearRect(0, 0, W, H);
 
-    // Load the original card template
     let template;
 
     try {
       template = await loadImage("/basecamp-template-V2.png");
     } catch (e) {
-      console.error(
-        "Could not load /basecamp-template-V2.png",
-        e
-      );
+      console.error("Could not load /basecamp-template-V2.png", e);
 
       ctx.fillStyle = "#111111";
       ctx.fillRect(0, 0, W, H);
 
       ctx.fillStyle = "#ffffff";
       ctx.font = "48px Arial";
-      ctx.fillText(
-        "Template not found",
-        60,
-        60
-      );
+      ctx.fillText("Template not found", 60, 60);
 
       return;
     }
 
-    ctx.drawImage(
-      template,
-      0,
-      0,
-      W,
-      H
-    );
+    // 1) draw template
+    ctx.drawImage(template, 0, 0, W, H);
 
-
-    // ======================================================
-    // Dynamic X profile picture
-    // ======================================================
-
-    const avatarData =
-      await fetchAvatarDataUrl(h);
+    // 2) draw avatar inside the black area (NO crop, contain mode)
+    const avatarData = await fetchAvatarDataUrl(h);
 
     if (avatarData) {
       try {
-        const img =
-          await loadImage(avatarData);
+        const img = await loadImage(avatarData);
 
-        // Exact profile area from the original template
-const px = 1005;
-const py = 75;
-const pw = 817;
-const ph = 700;
+        // zone noire prévue pour la PFP
+        const px = 1005;
+        const py = 75;
+        const pw = 817;
+        const ph = 830;
 
-const sourceRatio = img.width / img.height;
-const targetRatio = pw / ph;
+        const scale = Math.min(pw / img.width, ph / img.height);
 
-let sx = 0;
-let sy = 0;
-let sw = img.width;
-let sh = img.height;
+        const dw = img.width * scale;
+        const dh = img.height * scale;
 
-// Cover crop
-if (sourceRatio > targetRatio) {
-  sw = img.height * targetRatio;
-  sx = (img.width - sw) / 2;
-} else {
-  sh = img.width / targetRatio;
-  sy = (img.height - sh) / 2;
-}
+        const dx = px + (pw - dw) / 2;
+        const dy = py + (ph - dh) / 2;
 
-// léger zoom
-const zoom = 1.15;
-
-const newSw = sw / zoom;
-const newSh = sh / zoom;
-
-sx += (sw - newSw) / 2;
-sy += (sh - newSh) / 2;
-
-sw = newSw;
-sh = newSh;
-
-// Ajustement du personnage dans son cadre
-sx -= 18;
-sy += 4;
-
-// La PFP remplit UNIQUEMENT la zone noire du template
-ctx.save();
-ctx.beginPath();
-ctx.rect(px, py, pw, ph);
-ctx.clip();
-
-ctx.drawImage(
-  img,
-  sx,
-  sy,
-  sw,
-  sh,
-  px,
-  py,
-  pw,
-  ph
-);
-
-ctx.restore();
-        
+        ctx.drawImage(img, dx, dy, dw, dh);
       } catch (e) {
-        console.error(
-          "Could not load X avatar",
-          e
-        );
+        console.error("Could not load X avatar", e);
       }
     }
 
-    // ======================================================
-    // Dynamic @handle bar
-    // ======================================================
-
-
+    // 3) draw @handle inside the bar already present in the template
     ctx.fillStyle = "#ffffff";
-    ctx.textBaseline = "top";
+    ctx.font = "700 58px Arial, Helvetica, sans-serif";
+    ctx.textBaseline = "middle";
 
-    ctx.font =
-      "700 58px Arial, Helvetica, sans-serif";
-
-    ctx.fillText(
-      "@" + h,
-      1035,
-      795
-    );
+    ctx.fillText("@" + h, 1035, 958);
   }
 
   function generate() {
-    const h =
-      cleanHandle(value);
-
+    const h = cleanHandle(value);
     if (!h) return;
 
     setHandle(h);
     setValue("@" + h);
 
-    const u =
-      new URL(window.location.href);
-
+    const u = new URL(window.location.href);
     u.search = "";
+    u.searchParams.set("u", h);
 
-    u.searchParams.set(
-      "u",
-      h
-    );
-
-    history.replaceState(
-      {},
-      "",
-      u
-    );
+    history.replaceState({}, "", u);
   }
 
   function post() {
-    const text =
-      "I'm not going to Sui Basecamp 2026.";
+    const text = "I'm not going to Sui Basecamp 2026.";
 
     window.open(
       `https://twitter.com/intent/tweet?text=${encodeURIComponent(
         text
-      )}&url=${encodeURIComponent(
-        window.location.href
-      )}`,
+      )}&url=${encodeURIComponent(window.location.href)}`,
       "_blank"
     );
   }
@@ -270,51 +171,30 @@ ctx.restore();
   function download() {
     if (!handle) return;
 
-    const a =
-      document.createElement("a");
-
-    a.download =
-      `not-going-to-sui-basecamp-${handle}.png`;
-
-    a.href =
-      canvasRef.current.toDataURL(
-        "image/png"
-      );
-
+    const a = document.createElement("a");
+    a.download = `not-going-to-sui-basecamp-${handle}.png`;
+    a.href = canvasRef.current.toDataURL("image/png");
     a.click();
   }
 
   async function copyImage() {
-    const blob =
-      await new Promise((resolve) =>
-        canvasRef.current.toBlob(
-          resolve,
-          "image/png"
-        )
-      );
+    const blob = await new Promise((resolve) =>
+      canvasRef.current.toBlob(resolve, "image/png")
+    );
 
     await navigator.clipboard.write([
-      new ClipboardItem({
-        "image/png": blob
-      })
+      new ClipboardItem({ "image/png": blob })
     ]);
   }
 
   async function copyLink() {
-    await navigator.clipboard.writeText(
-      window.location.href
-    );
+    await navigator.clipboard.writeText(window.location.href);
   }
 
   return (
     <div className="shell">
-
       <div className="top">
-
-        <a
-          className="logo"
-          href="/"
-        >
+        <a className="logo" href="/">
           SUI <span>BASECAMP</span> 2026
         </a>
 
@@ -326,7 +206,6 @@ ctx.restore();
         >
           Register Now
         </a>
-
       </div>
 
       <h1>
@@ -336,90 +215,55 @@ ctx.restore();
       </h1>
 
       <p className="desc">
-        Drop your X handle and we'll make you a card
-        to let everyone know you won't be there.
+        Drop your X handle and we'll make you a card to let everyone know you
+        won't be there.
       </p>
 
       <div className="form">
-
         <input
           value={value}
-          onChange={(e) =>
-            setValue(e.target.value)
-          }
-          onKeyDown={(e) =>
-            e.key === "Enter" &&
-            generate()
-          }
+          onChange={(e) => setValue(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && generate()}
           placeholder="@xpsyk0w"
         />
 
-        <button
-          className="generate"
-          onClick={generate}
-        >
+        <button className="generate" onClick={generate}>
           Generate
         </button>
-
       </div>
 
       {handle && (
         <>
-
-          <div className="greet">
-            Won't see you there, @{handle}!
-          </div>
+          <div className="greet">Won't see you there, @{handle}!</div>
 
           <div className="cardFrame">
-
-            <canvas
-              ref={canvasRef}
-              className="cardCanvas"
-            />
-
+            <canvas ref={canvasRef} className="cardCanvas" />
           </div>
 
           <div className="actions">
-
-            <button
-              className="action primary"
-              onClick={post}
-            >
+            <button className="action primary" onClick={post}>
               𝕏&nbsp;&nbsp; Post to X
             </button>
 
-            <button
-              className="action"
-              onClick={download}
-            >
+            <button className="action" onClick={download}>
               ⇩&nbsp;&nbsp; Download PNG
             </button>
 
-            <button
-              className="action"
-              onClick={copyImage}
-            >
+            <button className="action" onClick={copyImage}>
               ⧉&nbsp;&nbsp; Copy image
             </button>
 
-            <button
-              className="action"
-              onClick={copyLink}
-            >
+            <button className="action" onClick={copyLink}>
               ↗&nbsp;&nbsp; Copy link
             </button>
-
           </div>
 
           <div className="note">
-            Posting to X opens a pre-filled post
-            with your link — the card shows up
-            as the preview.
+            Posting to X opens a pre-filled post with your link — the card shows
+            up as the preview.
           </div>
-
         </>
       )}
-
     </div>
   );
 }
